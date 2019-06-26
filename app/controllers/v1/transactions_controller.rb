@@ -24,7 +24,10 @@ class V1::TransactionsController < ApplicationController
         @transaction.made_to=user.id
         @transaction.trans_type="credit"
         if @transaction.save
-          #Update wallet amount 
+          #Update wallet amount
+          wallet_amount=user.wallet+=@transaction.amount
+          user.update(wallet: wallet_amount)
+
           render json: @transaction.as_json(only:[:user_id,:made_to,:trans_type,:amount])
         else
           head(:unprocessable_entity)
@@ -33,6 +36,7 @@ class V1::TransactionsController < ApplicationController
       render json:{status:'error',message:'Missing or Incorrect Token'}
     end
   end
+  #end transaction create 
 
 private
 
