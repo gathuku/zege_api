@@ -36,13 +36,38 @@ class V1::TransactionsController < ApplicationController
       render json:{status:'error',message:'Missing or Incorrect Token'}
     end
   end
-  #end transaction create 
+  #end transaction create
+
+#Transfer amount
+  def transfer
+       user=get_auth_token
+       if user
+         @transaction=Transaction.new(transfer_params)
+         @transaction.user_id=user.id
+         @transaction.made_to=User.find_by(email:@transaction.email).id
+         @transaction.trans_type="debit"
+         if @transaction.save
+           #Update wallet amount
+           wallet_amount=user.wallet-=@transaction.amount
+           user.update(wallet: wallet_amount)
+
+           render json: @transaction.as_json(only:[:user_id,:made_to,:trans_type,:amount])
+         end
+       else
+         render json:{status:'error',message:'Missing or Incorrect Token'}
+       end
+  end
+#end transfer
 
 private
+def transfer_params
+  params.require(:transfer).permit(:email,:amount)
+end
 
 def  transaction_params
   params.require(:transaction).permit(:amount)
 end
+
 # Get Bearer Token for request headers
   def get_auth_token
     if request.headers['Authorization'].present?

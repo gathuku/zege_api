@@ -5,5 +5,6 @@ Rails.application.routes.draw do
       resource :sessions, only:[:create,:destroy]
       resource :users, only:[:index, :create]
       resource :transactions
+      post '/transaction/transfer', to: 'transactions#transfer'
     end
 end
