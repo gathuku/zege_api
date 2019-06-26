@@ -10,11 +10,16 @@ class V1::SessionsController < ApplicationController
   end
 
   def destroy
-    current_user&.authentication_token = nil
-    if current_user.save
-      head(:ok)
-    else
-      head(:unauthorized)
-    end
+    user=User.where(authentication_token: params[:token]).first
+    if user
+    #reset Token
+    user.authentication_token = nil
+    user.save
+    head(:ok)
+    render json:{status:'success',message:'Logged out successfully'}
+   else
+    #render :json => 'user not found'
+    render json:{status:'Error',message:'user not found'}
+  end
   end
 end
