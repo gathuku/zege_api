@@ -4,5 +4,6 @@ Rails.application.routes.draw do
     namespace :v1, defaults: { format: :json} do
       resource :sessions, only:[:create,:destroy]
       resource :users, only:[:index, :create]
+      resource :transactions
     end
 end

@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_25_105832) do
+ActiveRecord::Schema.define(version: 2019_06_25_154911) do
+
+  create_table "transactions", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "made_to"
+    t.string "trans_type"
+    t.float "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false

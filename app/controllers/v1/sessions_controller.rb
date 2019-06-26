@@ -8,6 +8,7 @@ class V1::SessionsController < ApplicationController
       head(:unauthorized)
     end
   end
+
   def destroy
     current_user&.authentication_token = nil
     if current_user.save
