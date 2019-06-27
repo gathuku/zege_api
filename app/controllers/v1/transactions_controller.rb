@@ -42,17 +42,20 @@ class V1::TransactionsController < ApplicationController
   def transfer
        user=get_auth_token
        if user
-         @transaction=Transaction.new(transfer_params)
+         email=params[:email]
+         logger.info(email)
+         @transaction=Transaction.new
          @transaction.user_id=user.id
-         @transaction.made_to=User.find_by(email:@transaction.email).id
+         @transaction.made_to=User.find_by(email:email).id
          @transaction.trans_type="debit"
-         if @transaction.save
-           #Update wallet amount
-           wallet_amount=user.wallet-=@transaction.amount
-           user.update(wallet: wallet_amount)
-
-           render json: @transaction.as_json(only:[:user_id,:made_to,:trans_type,:amount])
-         end
+         @transaction.amount=params[:amount]
+         # if @transaction.save
+         #   #Update wallet amount
+         #   wallet_amount=user.wallet-=@transaction.amount
+         #   user.update(wallet: wallet_amount)
+         #
+         #   render json: @transaction.as_json(only:[:user_id,:made_to,:trans_type,:amount])
+         # end
        else
          render json:{status:'error',message:'Missing or Incorrect Token'}
        end
