@@ -53,8 +53,13 @@ class V1::TransactionsController < ApplicationController
            #Update wallet amount
            wallet_amount=user.wallet-=@transaction.amount
            user.update(wallet: wallet_amount)
-           logger.info('wallet uppdated')
-           #render json: @transaction.as_json(only:[:user_id,:made_to,:trans_type,:amount])
+
+
+           #update sentTo wallet
+           sentTo=User.find_by(id:@transaction.made_to)
+           sent_to_wallet=sentTo.wallet+=@transaction.amount
+           sentTo.update(wallet:sent_to_wallet)
+
            render json:{status:'success',message:'Amount sent',sentTo:email,balance:wallet_amount}
          end
        else
