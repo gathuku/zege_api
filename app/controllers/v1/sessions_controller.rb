@@ -1,11 +1,15 @@
 class V1::SessionsController < ApplicationController
   def create
+    logger.info(params[:email])
     @user= User.where(email: params[:email]).first
 
     if @user&.valid_password?(params[:password])
-      render :create, status: :created
+      #render :create, status: :created
+      render json:{status:'success', email:@user.email, token:@user.authentication_token}
     else
-      head(:unauthorized)
+      #head(:unauthorized)
+      render json:{status:"error",message:"Incorrect password or Email"}
+
     end
   end
 
