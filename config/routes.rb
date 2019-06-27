@@ -6,5 +6,7 @@ Rails.application.routes.draw do
       resource :users, only:[:index, :create]
       resource :transactions
       post '/transaction/transfer', to: 'transactions#transfer'
+      get '/balance', to: 'transactions#balance'
+      get '/notifications', to: 'transactions#notifications'
     end
 end

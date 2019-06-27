@@ -3,7 +3,11 @@ class V1::UsersController < ApplicationController
     @user =User.all
   end
   def create
-    @user=User.new(user_params)
+    @user=User.new
+    @user.email=params[:email]
+    @user.password=params[:password]
+    @user.password_confirmation=params[:password_confirmation]
+    @user.authentication_token=SecureRandom.alphanumeric
     if @user.save
       render :create
     else

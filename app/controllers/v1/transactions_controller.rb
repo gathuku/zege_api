@@ -68,6 +68,30 @@ class V1::TransactionsController < ApplicationController
   end
 #end transfer
 
+# Balance
+def balance
+  user=get_auth_token
+  if user
+    balance =user.wallet
+    render json:{status:'success',balance:balance}
+  else
+  render json:{status:'error',message:'Missing or Incorrect Token'}
+  end
+end
+# End balance
+
+#Notifications
+def notifications
+  user=get_auth_token
+  if user
+  @notifies=Transaction.where(made_to: user.id, trans_type: "credit")
+  render json:@notifies
+  else
+  render json:{status:'error',message:'Missing or Incorrect Token'}
+  end
+end
+#end notification
+
 private
 def transfer_params
   params.require(:transfer).permit(:email,:amount)
