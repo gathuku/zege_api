@@ -19,7 +19,9 @@ class V1::TransactionsController < ApplicationController
   def create
     user=get_auth_token
     if user
-        @transaction=Transaction.new(transaction_params)
+        @transaction=Transaction.new
+        #@transation.amount = params[:amount]
+        @transaction.amount=params[:amount]
         @transaction.user_id=user.id
         @transaction.made_to=user.id
         @transaction.trans_type="credit"
@@ -28,7 +30,8 @@ class V1::TransactionsController < ApplicationController
           wallet_amount=user.wallet+=@transaction.amount
           user.update(wallet: wallet_amount)
 
-          render json: @transaction.as_json(only:[:user_id,:made_to,:trans_type,:amount])
+          #render json: @transaction.as_json(only:[:user_id,:made_to,:trans_type,:amount])
+          render json:{status:'success',message:'amount deposited',balace:user.wallet}
         else
           head(:unprocessable_entity)
         end
