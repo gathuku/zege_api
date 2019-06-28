@@ -9,7 +9,7 @@ class V1::UsersController < ApplicationController
     @user.password_confirmation=params[:password_confirmation]
     @user.authentication_token=SecureRandom.alphanumeric
     if @user.save
-      render :create
+      render json:{status:'success',message:'Registered',token:@user.authentication_token}
     else
       head(:unprocessable_entity)
     end
