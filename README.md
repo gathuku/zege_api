@@ -1,24 +1,12 @@
-# README
+## Simple Api.
+### Technologies used
+- Rails
+- Ruby
+- Postgress Database
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Base URL
+[Link](https://zege-api.herokuapp.com)
+Note: The api doen't have any views
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### Consumed Example with Vue.JS
+[link](https://zege-api.netlify.com/)
