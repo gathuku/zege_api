@@ -3,6 +3,7 @@ class V1::UsersController < ApplicationController
     @user =User.all
   end
   def create
+
     @user=User.new
     @user.email=params[:email]
     @user.password=params[:password]
@@ -11,7 +12,8 @@ class V1::UsersController < ApplicationController
     if @user.save
       render json:{status:'success',message:'Registered',token:@user.authentication_token}
     else
-      head(:unprocessable_entity)
+      #head(:unprocessable_entity)
+      render json:{status:'error',message:'Email Taken'}
     end
   end
 

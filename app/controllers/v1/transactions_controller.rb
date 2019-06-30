@@ -23,7 +23,7 @@ class V1::TransactionsController < ApplicationController
         #@transation.amount = params[:amount]
         @transaction.amount=params[:amount]
         @transaction.user_id=user.id
-        @transaction.made_to=user.id
+        @transaction.made_to=user.email
         @transaction.trans_type="credit"
         if @transaction.save
           #Update wallet amount
@@ -46,10 +46,18 @@ class V1::TransactionsController < ApplicationController
        user=get_auth_token
        if user
          email=params[:email]
+         sent_to=User.find_by(email:email)
+         if !sent_to
+          return  render json:{status:'error',message:'user does not exist'}
+         end
+
+         if  user.wallet < params[:amount].to_f
+          return render json:{status:'error',message:'Insufficient Funds'}
+         end
 
          @transaction=Transaction.new
          @transaction.user_id=user.id
-         @transaction.made_to=User.find_by(email:email).id
+         @transaction.made_to=params[:email]
          @transaction.trans_type="debit"
          @transaction.amount=params[:amount]
          if @transaction.save
@@ -59,7 +67,7 @@ class V1::TransactionsController < ApplicationController
 
 
            #update sentTo wallet
-           sentTo=User.find_by(id:@transaction.made_to)
+           sentTo=User.find_by(email:@transaction.made_to)
            sent_to_wallet=sentTo.wallet+=@transaction.amount
            sentTo.update(wallet:sent_to_wallet)
 
@@ -88,6 +96,7 @@ def notifications
   user=get_auth_token
   if user
   @notifies=Transaction.where(made_to: user.id, trans_type: "credit")
+
   render json:@notifies
   else
   render json:{status:'error',message:'Missing or Incorrect Token'}

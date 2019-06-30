@@ -2,6 +2,8 @@ class V1::SessionsController < ApplicationController
   def create
     #logger.info(params[:email])
     @user= User.where(email: params[:email]).first
+    @user.authentication_token=SecureRandom.alphanumeric
+    @user.save
 
     if @user&.valid_password?(params[:password])
       #render :create, status: :created
@@ -19,7 +21,7 @@ class V1::SessionsController < ApplicationController
     #reset Token
     user.authentication_token = nil
     user.save
-    head(:ok)
+   #  head(:ok)
     render json:{status:'success',message:'Logged out successfully'}
    else
     #render :json => 'user not found'
