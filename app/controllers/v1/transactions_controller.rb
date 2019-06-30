@@ -95,7 +95,7 @@ end
 def notifications
   user=get_auth_token
   if user
-  @notifies=Transaction.where(made_to: user.id, trans_type: "credit")
+  @notifies=Transaction.where(made_to: user.email, trans_type: "credit")
 
   render json:@notifies
   else
